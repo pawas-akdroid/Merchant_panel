@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name": "Cashier",
+    "value": "Merchant-Cashier"
+  },   {
+    "id": 2,
+    "name": "Sub Merchant",
+    "value": "Merchant-SubMerchant"
+  }
+]
