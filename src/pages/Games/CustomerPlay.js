@@ -52,7 +52,7 @@ const OTPComponent = ({ setOtpVerify, setPhone, phone }) => {
 
     const handleUserPhone = () => {
         if (confirm("Are you sure?")) {
-            MerchantTokenUrl().get(`/get-transfer-token?customer=${phone}`).then((res) => {
+            MerchantTokenUrl().get(`/get-transfer-token?customer=+${phone}`).then((res) => {
                 setOtpVerified(true)
                 console.log(res)
                 SuccessNotification({ title: "Success", message: "The otp has sent to the number please verify the number." })
@@ -63,7 +63,7 @@ const OTPComponent = ({ setOtpVerify, setPhone, phone }) => {
     }
 
     const handleOtpVerify = () => {
-        MerchantTokenUrl().post(`/verify-transfer-token?customer=${phone}`, { "token": OTP }).then(res => {
+        MerchantTokenUrl().post(`/verify-transfer-token?customer=+${phone}`, { "token": OTP }).then(res => {
             setOtpVerify(true)
         }).catch((err) => {
             ErrorHandler(err)
@@ -200,7 +200,7 @@ const GameComponent = ({ id, phone }) => {
     const confirmPlay = () => {
         setConfirmBox(false)
         setMain(false)
-        MerchantTokenUrl().get(`/get-transfer-token?customer=${phone}`).then((res) => {
+        MerchantTokenUrl().get(`/get-transfer-token?customer=+${phone}`).then((res) => {
             SuccessNotification({ title: "Success", message: "The otp has sent to the number please verify the number." })
             console.log(res)
         }).catch((err) => {

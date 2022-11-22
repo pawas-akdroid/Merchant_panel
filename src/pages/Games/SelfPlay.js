@@ -20,6 +20,8 @@ const SelfPlay = () => {
   const [data, setData] = useState(null)
   const [circles, setCirlces] = useState([])
   const [allowed, setAllowed] = useState(5)
+  const [iteration_id, setIterationId] = useState('')
+
   const [selectionComplete, setSelectionComplete] = useState(false)
   const [selectedNumbers, setSelectedNumbers] = useState([])
   const [showToast, setShowToast] = useState(false)
@@ -28,7 +30,7 @@ const SelfPlay = () => {
   const [showYoutube, setShowYoutube] = useState(false)
   const videoRef = useRef(null)
   const [submitLoading, setSubmitLoading] = useState(false)
-
+  const [allowPlay, setAllowPlay] = useState(false)
   const [plusOne, setPlusOne] = useState(true)
   const [plusCircles, setPlusCirlces] = useState([])
   const [plusSelectedNumbers, setPlusSelectedNumbers] = useState([])
@@ -42,22 +44,33 @@ const SelfPlay = () => {
     MerchantTokenUrl().get(`game/${uid}`).then(res => {
       setData(res?.data?.data?.data)
       console.log(res?.data?.data?.data)
+      setIterationId(res?.data?.data?.data?.GameIterations[0]?.id)
+      console.log(res?.data?.data?.data?.GameIterations[0]?.id)
       setAllowed(res?.data?.data?.data?.allowed_numbers)
       setPlusOne(res?.data?.data?.data?.extra)
       addInCircle(res?.data?.data?.data.total_numbers)
     }).catch((err) => {
       ErrorHandler(err)
     })
+    if (Date.now() > new Date(data?.closing_time).getTime()){
+      setAllowPlay(false)
+    }
+    else{
+      setTimeout(()=>setAllowPlay(false), )
+    }
   }, [])
 
 
 
-  const countdownRenderer = ({ hours, minutes, seconds, completed }) => {
+  const countdownRenderer = ({ days, hours, minutes, seconds, completed }) => {
     if (completed) {
       return <p className="p-5">The Game has been expired.</p>
     } else {
-      return <span>{hours} Hours:{minutes} Minues:{seconds} Seconds</span>;
+      return <span>{days} Days : {hours} Hours : {minutes} Minues : {seconds} Seconds</span>;
     }
+  }
+  const countdownRenderered = ({ days, hours, minutes, seconds, completed }) => {
+      return <span>{days} Days : {hours} Hours : {minutes} Minues : {seconds} Seconds</span>;
   }
 
   const showVideo = () => {
@@ -153,11 +166,10 @@ const SelfPlay = () => {
       setSubmitLoading(true)
       MerchantTokenUrl().post(`/verify-transfer-token`, { "token": OTP }).then(res => {
         SuccessNotification({ title: "Congratulation", message: "Your otp has been verified." })
-        console.log(res)
       }).catch((err) => {
         ErrorHandler(err)
       })
-      MerchantTokenUrl().post('/game', { game_id: uid, "chosen_number": selectedNumbers }).then(res => {
+      MerchantTokenUrl().post('/game', { game_id: uid, "chosen_number": selectedNumbers, "iteration_id":iteration_id }).then(res => {
         SuccessNotification({ title: "Congratulation", message: "You have played the game." })
         history('/games')
       }).catch(err => {
@@ -168,10 +180,15 @@ const SelfPlay = () => {
       // check if value is correct and if current play the game now
     }
   }, [OTP])
+
+
+
+
+
   return (
     loading ? <Loadings /> :
       <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
-        <Header category={data?.Category.name} title="Game Play" />
+        <Header category={data?.Category?.name} title="Game Play" />
 
         <Modal opened={confirmBox} onClose={() => setConfirmBox(false)} transition="fade"
           transitionDuration={600}
@@ -224,66 +241,79 @@ const SelfPlay = () => {
                 <Toast.Body>{toastError}</Toast.Body>
               </Toast>
             </Container>
-            <Container className="mt-5 d-flex align-items-center justify-content-center">
-              <Card style={{ width: '100%' }}>
-                <Card.Header style={{ userSelect: 'none' }}>
-                  <span style={{ marginLeft: 20 }}>
-                    Closing Time:
-                    <Countdown
-                      date={new Date(data?.closing_time)}
-                      renderer={countdownRenderer}
-                    />
-                  </span>
-                </Card.Header>
-                <Card.Body className='p-3'>
-                  <Card.Title></Card.Title>
-                  <Card.Body style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {circles.map((v, i) => (
-                      <Circle key={i} value={v.value}
-                        selectedNumbers={selectedNumbers} setSelectedNumbers={setSelectedNumbers} allowed={allowed} />
-                    ))}
-                  </Card.Body>
-                </Card.Body>
-              </Card>
-            </Container>
-            <Container className="mt-3 d-flex align-items-center justify-content-center">
-              <b>{selectedNumbers.length === 0 ? 'Select Your Numbers' : 'Your Selected Numbers: '}</b>
-              <span style={{ marginLeft: 5 }}>{selectedNumbers.map((v, i) => <>{v}
-                {i !== selectedNumbers.length - 1 ? <>,</> : <></>}
-              </>)}</span>
-            </Container>
 
-            {plusOne ? <Container className="mt-5 d-flex align-items-center justify-content-center">
-              <Card style={{ width: '100%' }}>
-                <Card.Header style={{ userSelect: 'none' }}>
-                  <span style={{ marginLeft: 5 }}>Your Plus One</span>
-                </Card.Header>
-                <Card.Body className='p-3'>
-                  <Card.Title></Card.Title>
-                  <Card.Body style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                    {plusCircles.map((v, i) => (
-                      <Circle key={i} value={v.value}
-                        selectedNumbers={plusSelectedNumbers} setSelectedNumbers={setPlusSelectedNumbers} allowed={plusAllowed} />
-                    ))}
-                  </Card.Body>
-                  <span className="mt-2 d-flex align-items-center justify-content-center">
-                    {plusSelectionComplete ? <Button onClick={playNow} variant="outline">Play</Button> : <></>}
-                  </span>
-                </Card.Body>
-              </Card>
-            </Container> : <></>}
+            {
+              new Date().getTime() > new Date(data?.opening_time).getTime() ? <>
+                <Container className="mt-5 d-flex align-items-center justify-content-center">
+                  <Card style={{ width: '100%' }}>
+                    <Card.Header style={{ userSelect: 'none' }}>
+                      <span style={{ marginLeft: 20 }}>
+                        Closing Time:
+                        <Countdown
+                          date={new Date(data?.closing_time)}
+                          renderer={countdownRenderer}
+                        />
+                      </span>
+                    </Card.Header>
+                    <Card.Body className='p-3'>
+                      <Card.Title></Card.Title>
+                      <Card.Body style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {circles.map((v, i) => (
+                          <Circle key={i} value={v.value}
+                            selectedNumbers={selectedNumbers} setSelectedNumbers={setSelectedNumbers} allowed={allowed} />
+                        ))}
+                      </Card.Body>
+                    </Card.Body>
+                  </Card>
+                </Container>
+                <Container className="mt-3 d-flex align-items-center justify-content-center">
+                  <b>{selectedNumbers.length === 0 ? 'Select Your Numbers' : 'Your Selected Numbers: '}</b>
+                  <span style={{ marginLeft: 5 }}>{selectedNumbers.map((v, i) => <>{v}
+                    {i !== selectedNumbers.length - 1 ? <>,</> : <></>}
+                  </>)}</span>
+                </Container>
 
-            <span className="mt-2 d-flex align-items-center justify-content-center">
-              {selectionComplete ? <Button onClick={playNow} variant="outline">Play</Button> : <></>}
-            </span>
+                {plusOne ? <Container className="mt-5 d-flex align-items-center justify-content-center">
+                  <Card style={{ width: '100%' }}>
+                    <Card.Header style={{ userSelect: 'none' }}>
+                      <span style={{ marginLeft: 5 }}>Your Plus One</span>
+                    </Card.Header>
+                    <Card.Body className='p-3'>
+                      <Card.Title></Card.Title>
+                      <Card.Body style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {plusCircles.map((v, i) => (
+                          <Circle key={i} value={v.value}
+                            selectedNumbers={plusSelectedNumbers} setSelectedNumbers={setPlusSelectedNumbers} allowed={plusAllowed} />
+                        ))}
+                      </Card.Body>
+                      <span className="mt-2 d-flex align-items-center justify-content-center">
+                        {plusSelectionComplete ? <Button onClick={playNow} variant="outline">Play</Button> : <></>}
+                      </span>
+                    </Card.Body>
+                  </Card>
+                </Container> : <></>}
 
+                <span className="mt-2 d-flex align-items-center justify-content-center">
+                  {selectionComplete ? <Button onClick={playNow} variant="outline">Play</Button> : <></>}
+                </span>
+
+              </> : <p>  
+                 This Game is comming soon. Please stay connected. This game will be available after <Countdown
+                          date={new Date(data?.opening_time)}
+                          renderer={countdownRenderered}
+                        />
+                </p>}
             {/* <Container style={{ flexDirection: 'column' }} className="mt-5 d-flex align-items-center justify-content-center">
                     <span onClick={showVideo} style={{ color: 'blue', cursor: 'pointer' }}>
                         <strong>{!showYoutube ? 'Learn How To Play By Watching A Video' : 'Hide Video'}</strong>
                     </span>
                     {showYoutube ? <YouTube ref={videoRef} className='mt-4' videoId="2g811Eo7K8U" opts={opts} /> : <></>}
                 </Container> */}
-          </Container> :
+          </Container>
+
+
+
+          :
           <Container style={{ flexDirection: 'column' }} className="mt-5 d-flex align-items-center justify-content-center">
             <h3>{submitLoading ? 'Please Wait...' : 'Enter Your OTP'}</h3>
             {!submitLoading ? <>
@@ -300,6 +330,8 @@ const SelfPlay = () => {
               <ReactLoading type={'bars'} color={'#0b1'} height={100} width={100} />
             </>}
           </Container>
+
+
         }
 
 

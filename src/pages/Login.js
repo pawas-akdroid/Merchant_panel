@@ -36,7 +36,6 @@ const LoginPage = () => {
             password: log_password
         }
         MerchantUrl.post(`/login`, body).then((res) => {
-            console.log(res?.data?.data);
             setSuccess(true)
         }).catch(err => {
             ErrorHandler(err)
@@ -48,7 +47,7 @@ const LoginPage = () => {
 
     useEffect(() => {
         if (merchant && token) {
-			const from = location.state?.from?.pathname || "/";
+			const from = location.state?.from?.pathname || "/dashboard";
 			history(from)
 		}
         Title("Login")

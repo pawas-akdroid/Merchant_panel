@@ -26,7 +26,6 @@ const MerchantVoucherBatch = () => {
   }, [refresh])
 
   const handleEnable = (active, batch) => {
-    console.log(active, batch)
     MerchantTokenUrl().put(`voucher-list?active=${active}&batch=${batch}&id=${id}`,{}).then((res) => {
       SuccessNotification({ title: "Added!", message: "The Batch has been Updated." })
       setRefresh(true)
