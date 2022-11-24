@@ -4,18 +4,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import { MerchantTokenUrl } from '../../Utilities/Urls';
 import { Title } from '../../components/Header';
 import { ErrorHandler, SuccessNotification } from '../../components/NotificationProvider';
+import { Loadings } from '../../components/Loading';
 
 
 function Inventory() {
 
   const navigate = useNavigate()
   const [data, setData] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     MerchantTokenUrl().get('/get-all-inventory').then(res => {
       setData(res?.data?.data)
-      console.log(res)
+      setLoading(false)
     }).catch(err => {
+      setLoading(false)
       ErrorHandler(err)
     })
     Title("Inventory")
@@ -24,6 +27,7 @@ function Inventory() {
 
 
   return (
+    loading ? <Loadings/> :
 
     <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
       <Header category="Product" title="List of Products" />

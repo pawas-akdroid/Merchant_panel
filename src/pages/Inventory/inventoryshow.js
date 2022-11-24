@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import { Link, useParams } from 'react-router-dom';
-import { ImgUrl2, MerchantTokenUrl } from '../../Utilities/Urls';
+import { ImgUrl, MerchantTokenUrl } from '../../Utilities/Urls';
 import { ErrorHandler } from '../../components/NotificationProvider';
 import { Grid } from '@mantine/core';
 
@@ -16,6 +16,7 @@ function ViewInventory() {
 
   useEffect(() => {
     MerchantTokenUrl().get(`/get-inventory/${id}`).then(res => {
+      console.log(res)
       setImages(res?.data?.data?.ProductImages)
       setVariations(res?.data?.data?.ProductVariations)
       console.log(res?.data?.data?.ProductVariations)
@@ -40,7 +41,7 @@ function ViewInventory() {
             images.length > 0 ?
               images.map((e) =>
                 <Grid.Col sm={6}>
-                  <img src={`${ImgUrl2}${e.image}`} />
+                  <img src={`${ImgUrl}${e.image}`} />
                 </Grid.Col>
               ) : ""
           }

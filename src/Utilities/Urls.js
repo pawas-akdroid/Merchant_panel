@@ -30,6 +30,6 @@ export const MerchantTokenUrl =()=>{
 
 
 export const  GameImgUrl ="http://52.26.60.188:6969/"
-export const  ImgUrl ="https://kinkhelpoint.thriftlynepal.com/"
+export const  ImgUrl ="http://44.237.37.194:6001/"
 export const  ImgUrl2 ="http://localhost:6001/"
 

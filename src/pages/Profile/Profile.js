@@ -3,27 +3,33 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components'
 import { Title } from '../../components/Header'
+import { Loadings } from '../../components/Loading'
 import { ErrorHandler } from '../../components/NotificationProvider'
 import { ImgUrl, MerchantTokenUrl } from '../../Utilities/Urls'
 
 const Profile = () => {
     const [user, setUser] = useState()
     const [merchant, setMerchant] = useState()
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        setLoading(()=>setLoading(false), 1000)
         MerchantTokenUrl().get('/profile').then(res => {
             setUser(res?.data?.data.user)
             setMerchant(res?.data?.data?.merchant)
+            console.log(res?.data?.data?.merchant)
+        Title(merchant?.parent_company)
+
         }).catch((err) => {
             ErrorHandler(err)
         })
-        Title(merchant.parent_company)
     }, [])
 
 
     return (
+        loading ? <Loadings/> :
         <div className="m-2 md:m-10 mt-5 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl h-full">
-            <Header category="Profile" title={merchant.parent_company} />
+            <Header category="Profile" title={merchant?.parent_company} />
 
             <div className=" md:mt-0 md:col-span-2 dark:bg-secondary-dark-bg">
                 <div className=" sm:rounded-md sm:overflow-hidden dark:bg-secondary-dark-bg">
@@ -40,16 +46,16 @@ const Profile = () => {
                             <Grid.Col span={6}>
                                 <h2>User Details</h2>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1'>Name: </strong> <span className='text-gray-400'> {user.name}</span>
+                                    <strong className='mr-1'>Name: </strong> <span className='text-gray-400'> {user?.name}</span>
                                 </div>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1'>Credential Phone: </strong> <span className='text-gray-400'> {user.phone}</span>
+                                    <strong className='mr-1'>Credential Phone: </strong> <span className='text-gray-400'> {user?.phone}</span>
                                 </div>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1'>Email: </strong><span className='text-gray-400'>{user.email}</span>
+                                    <strong className='mr-1'>Email: </strong><span className='text-gray-400'>{user?.email}</span>
                                 </div>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1'>Unique Identity: </strong> <span className='text-gray-400'> {user.uid}</span>
+                                    <strong className='mr-1'>Unique Identity: </strong> <span className='text-gray-400'> {user?.uid}</span>
                                 </div>
                                 <div className='flex text-base mb-4'>
                                 </div>
@@ -58,23 +64,23 @@ const Profile = () => {
                             <Grid.Col span={12} className={"mt-10"}>
                                 <h2 className='justify-center text-center'>Merchant Details</h2>
                                 <div className='flex text-base mb-2 '>
-                                    <strong className='mr-1 '>Parent Company Name: </strong> <span className='text-gray-400'>{merchant.parent_company}</span>
+                                    <strong className='mr-1 '>Parent Company Name: </strong> <span className='text-gray-400'>{merchant?.parent_company}</span>
                                 </div>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1 green' >Merchant Code:</strong><span className='text-gray-400'> {merchant.merchant_code}</span>
+                                    <strong className='mr-1 green' >Merchant Code:</strong><span className='text-gray-400'> {merchant?.merchant_code}</span>
                                 </div>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1'>Store Address: </strong><span className='text-gray-400'> {merchant.store_address}</span>
+                                    <strong className='mr-1'>Store Address: </strong><span className='text-gray-400'> {merchant?.store_address}</span>
                                 </div>
                                 <div className='flex text-base mb-2'>
-                                    <strong className='mr-1'>Store Phone: </strong> <span className='text-gray-400'>{merchant.store_phone}</span>
+                                    <strong className='mr-1'>Store Phone: </strong> <span className='text-gray-400'>{merchant?.store_phone}</span>
                                 </div>
-                                {merchant.secret_key !== null ? 
+                                {merchant?.secret_key !== null ? 
                                 <div className='flex text-base mb-4'>
-                                    <strong className='mr-1'>Secret Key:</strong> <span className='text-gray-400'>{merchant.secret_key}</span> 
+                                    <strong className='mr-1'>Secret Key:</strong> <span className='text-gray-400'>{merchant?.secret_key}</span> 
                                 </div> :""}
                                 <div className='flex text-base mb-4'>
-                                    <strong className='mr-1'>Pan Number / Shop Verification Number:</strong> <span className='text-gray-400'>{merchant.pan_number}</span> 
+                                    <strong className='mr-1'>Pan Number / Shop Verification Number:</strong> <span className='text-gray-400'>{merchant?.pan_number}</span> 
                                 </div>
                                 
                             </Grid.Col>

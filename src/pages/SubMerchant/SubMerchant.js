@@ -34,7 +34,7 @@ function SubMerchant() {
 
   return (
     <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
-      <Header category="Merchants" title="List of Merchants" />
+      <Header category="Sub Merchants" title="List of Sub Merchant" />
 
       <Link to="add">
         <button className="text-gray-400 dark:text-gray-400 font-bold py-2 px-4 border rounded mb-2">

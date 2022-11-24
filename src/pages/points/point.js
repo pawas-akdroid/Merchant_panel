@@ -24,8 +24,8 @@ function Points() {
   useEffect(() => {
     MerchantTokenUrl().get('/point').then(res => {
       setData(res?.data?.data["point"])
-      setAmount(res?.data?.data["config"].amounts)
-      setValue(res?.data?.data["config"].value)
+      setAmount(res?.data?.data["config"]?.amounts)
+      setValue(res?.data?.data["config"]?.value)
       setRefresh(false)
     }).catch((err) => {
       ErrorHandler(err)

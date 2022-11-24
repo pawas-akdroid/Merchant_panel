@@ -36,6 +36,7 @@ const LoginPage = () => {
             password: log_password
         }
         MerchantUrl.post(`/login`, body).then((res) => {
+            console.log(res?.data?.data)
             setSuccess(true)
         }).catch(err => {
             ErrorHandler(err)

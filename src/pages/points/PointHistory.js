@@ -65,7 +65,7 @@ const PointHistory = () => {
                                             {e.id}
                                             </td>
                                             <td className="py-4 px-6">
-                                            {new Date(e.createdAt).toString()}
+                                            {new Date(e.createdAt).toLocaleString()}
                                             </td>
                                         </tr>
                                     )}

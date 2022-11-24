@@ -7,7 +7,7 @@ import 'filepond/dist/filepond.min.css'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 import React, { useEffect, useState } from 'react';
 import { Header } from '../../components';
-import { ImgUrl, ImgUrl2, MerchantTokenUrl } from '../../Utilities/Urls';
+import { ImgUrl, MerchantTokenUrl } from '../../Utilities/Urls';
 import { Button, Grid, PasswordInput } from '@mantine/core';
 import { ErrorHandler, ErrorNotification, SuccessNotification } from '../../components/NotificationProvider';
 import { Title } from '../../components/Header';
@@ -31,11 +31,11 @@ function UpdateProfile() {
 
   useEffect(() => {
     MerchantTokenUrl().get("profile").then(res => {
-      console.log(res.data.data.user.image)
       setImage(res.data.data.user.image)
       setName(res.data.data.user.name)
       setEmail(res.data.data.user.email)
       setPhone(res.data.data.user.phone)
+      console.log(res?.data?.data)
       setParentCompany(res.data.data.merchant.parent_company)
       setStoreAddress(res.data.data.merchant.store_address)
       setPanNumber(res.data.data.merchant.pan_number)
@@ -61,7 +61,6 @@ function UpdateProfile() {
     MerchantTokenUrl().put("/merchant-credential", {"parent_company":name,"store_phone":store_phone, "store_address":store_address, "pan_number":pan_number}).then(res=>{
       setRefresh(true)
       SuccessNotification({title:"Succeed!", message:"Your Merchant data has been updated."})
-
     }).catch(err=>{
       ErrorHandler(err)
     })
@@ -107,7 +106,7 @@ function UpdateProfile() {
                   <Grid grow>
                     <Grid.Col sm={3}>
                       <img className='inline-block h-40 w-40 rounded-full overflow-hidden bg-gray-100 dark:bg-secondary-dark-bg text-center'
-                        src={`${ImgUrl2}${image}`} />
+                        src={`${ImgUrl}${image}`} />
 
                     </Grid.Col>
                     <Grid.Col sm={9}>

@@ -67,6 +67,8 @@ function Games() {
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Opening Time
+                </th><th scope="col" className="py-3 px-6">
+                  Closing Time
                 </th>
               </tr>
             </thead>
@@ -78,22 +80,24 @@ function Games() {
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
                       <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                        {e.name}
+                        {e?.Game?.name}
                       </td>
 
                       <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                        {e.charge}
+                        {e?.Game?.charge}
                       </td>
                       <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                        {new Date(e.closing_time).toLocaleString()}
+                        {new Date(e?.Game?.opening_time).toLocaleString()}
+                      </td><td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                        {new Date(e?.Game?.closing_time).toLocaleString()}
                       </td>
                       <td className="py-4 px-6">
-                        <Link to={`${e.id}/self-play`}>
+                        <Link to={`${e?.Game?.id}/self-play`}>
                           <p className="font-medium text-green-600 dark:text-green-500 hover:underline mr-2">
                             Self Play
                           </p>
                         </Link>
-                        <Link to={`${e.id}/customer-play`}>
+                        <Link to={`${e?.Game?.id}/customer-play`}>
                           <p className="font-medium text-green-600 dark:text-green-500 hover:underline cursor-pointer">
                             Customer Play
                           </p>

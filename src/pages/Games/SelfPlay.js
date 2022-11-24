@@ -218,8 +218,7 @@ const SelfPlay = () => {
         <div className='bannerImage'>
           <Grid>
             <Grid.Col sm={12}>
-              <img src={`${GameImgUrl}${data?.Category?.image}`}
-              />
+              {/* <img src={`${GameImgUrl}${data?.Category?.image}`}/> */}
             </Grid.Col>
           </Grid>
 

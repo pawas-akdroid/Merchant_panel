@@ -6,6 +6,7 @@ import { Button, Checkbox, Modal, Pagination, Select } from '@mantine/core'
 import { Loadings } from '../../components/Loading'
 import {  SuccessNotification, ErrorHandler } from '../../components/NotificationProvider'
 import { Title } from '../../components/Header'
+import { useSelector } from 'react-redux'
 
 
 
@@ -27,6 +28,7 @@ const VoucherList = () => {
   const [to, setTo] = useState("")
   const [batch_, setBatchOf] = useState("")
   const history = useNavigate()
+  const merchant = useSelector(p=>p?.merchant.merchant)
 
 
 
@@ -60,7 +62,7 @@ const VoucherList = () => {
 
   const handlePrint = () => {
     let batchData = batch === "all" ? null : batch
-    MerchantTokenUrl().get(`/download-voucher-lists-admin/${uid}?batch=${batchData}&merchant=${id}`,).then((res) => {
+    MerchantTokenUrl().get(`/download-voucher-lists-admin/${id}?batch=${batchData}&merchant=${merchant.id}`,).then((res) => {
       window.open(`${ImgUrl}${res.data.data}`, "_blank", 'noopener, noreferrer')
     }).catch((err) => { 
       console.log(err)

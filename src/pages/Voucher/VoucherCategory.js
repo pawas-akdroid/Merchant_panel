@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Header } from '../../components'
 import { Title } from '../../components/Header'
+import { Loadings } from '../../components/Loading'
 import { ErrorHandler } from '../../components/NotificationProvider'
 import { MerchantTokenUrl } from '../../Utilities/Urls'
 
@@ -48,7 +49,7 @@ const VoucherCategory = () => {
         })
     }
 
-    return (
+    return ( loading ? <Loadings/>: 
         <>
             <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
                 <Header category={"Vouchers"} title="List of Vouchers" />
