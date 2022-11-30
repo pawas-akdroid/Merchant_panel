@@ -43,20 +43,18 @@ const SelfPlay = () => {
 
     MerchantTokenUrl().get(`game/${uid}`).then(res => {
       setData(res?.data?.data?.data)
-      console.log(res?.data?.data?.data)
       setIterationId(res?.data?.data?.data?.GameIterations[0]?.id)
-      console.log(res?.data?.data?.data?.GameIterations[0]?.id)
       setAllowed(res?.data?.data?.data?.allowed_numbers)
       setPlusOne(res?.data?.data?.data?.extra)
       addInCircle(res?.data?.data?.data.total_numbers)
     }).catch((err) => {
       ErrorHandler(err)
     })
-    if (Date.now() > new Date(data?.closing_time).getTime()){
+    if (Date.now() > new Date(data?.closing_time).getTime()) {
       setAllowPlay(false)
     }
-    else{
-      setTimeout(()=>setAllowPlay(false), )
+    else {
+      setTimeout(() => setAllowPlay(false),)
     }
   }, [])
 
@@ -70,7 +68,7 @@ const SelfPlay = () => {
     }
   }
   const countdownRenderered = ({ days, hours, minutes, seconds, completed }) => {
-      return <span>{days} Days : {hours} Hours : {minutes} Minues : {seconds} Seconds</span>;
+    return <span>{days} Days : {hours} Hours : {minutes} Minues : {seconds} Seconds</span>;
   }
 
   const showVideo = () => {
@@ -162,21 +160,28 @@ const SelfPlay = () => {
   }
 
   useEffect(() => {
+
     if (OTP.length === 6) {
       setSubmitLoading(true)
       MerchantTokenUrl().post(`/verify-transfer-token`, { "token": OTP }).then(res => {
         SuccessNotification({ title: "Congratulation", message: "Your otp has been verified." })
+        MerchantTokenUrl().post('/game', { game_id: uid, "chosen_number": selectedNumbers.toString(), "iteration_id": iteration_id }).then(res => {
+          SuccessNotification({ title: "Congratulation", message: "You have played the game." })
+
+          history('/games')
+        }).catch(err => {
+          setMain(true)
+          console.log(err)
+                  setSelectedNumbers([])
+
+          ErrorHandler(err)
+        })
       }).catch((err) => {
+              setSelectedNumbers([])
+setMain(true)
         ErrorHandler(err)
       })
-      MerchantTokenUrl().post('/game', { game_id: uid, "chosen_number": selectedNumbers, "iteration_id":iteration_id }).then(res => {
-        SuccessNotification({ title: "Congratulation", message: "You have played the game." })
-        history('/games')
-      }).catch(err => {
-        setMain(true)
-        console.log(err?.response?.data)
-        ErrorHandler(err)
-      })
+
       // check if value is correct and if current play the game now
     }
   }, [OTP])
@@ -267,9 +272,7 @@ const SelfPlay = () => {
                 </Container>
                 <Container className="mt-3 d-flex align-items-center justify-content-center">
                   <b>{selectedNumbers.length === 0 ? 'Select Your Numbers' : 'Your Selected Numbers: '}</b>
-                  <span style={{ marginLeft: 5 }}>{selectedNumbers.map((v, i) => <>{v}
-                    {i !== selectedNumbers.length - 1 ? <>,</> : <></>}
-                  </>)}</span>
+                  <span style={{ marginLeft: 5 }}>{selectedNumbers.map((v, i) => <>{v}{i !== selectedNumbers.length - 1 ? <>,</> : <></>}</>)}</span>
                 </Container>
 
                 {plusOne ? <Container className="mt-5 d-flex align-items-center justify-content-center">
@@ -296,12 +299,12 @@ const SelfPlay = () => {
                   {selectionComplete ? <Button onClick={playNow} variant="outline">Play</Button> : <></>}
                 </span>
 
-              </> : <p>  
-                 This Game is comming soon. Please stay connected. This game will be available after <Countdown
-                          date={new Date(data?.opening_time)}
-                          renderer={countdownRenderered}
-                        />
-                </p>}
+              </> : <p>
+                This Game is comming soon. Please stay connected. This game will be available after <Countdown
+                  date={new Date(data?.opening_time)}
+                  renderer={countdownRenderered}
+                />
+              </p>}
             {/* <Container style={{ flexDirection: 'column' }} className="mt-5 d-flex align-items-center justify-content-center">
                     <span onClick={showVideo} style={{ color: 'blue', cursor: 'pointer' }}>
                         <strong>{!showYoutube ? 'Learn How To Play By Watching A Video' : 'Hide Video'}</strong>

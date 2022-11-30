@@ -15,7 +15,7 @@ const persistedState = loadState()
 const store = createStore(allReducers, persistedState)
 store.subscribe(() => {
   saveState({
-    token: store.getState().token,
+    mToken: store.getState().mToken,
     merchant: store.getState().merchant,
     site: store.getState().site,
 

@@ -11,25 +11,22 @@ import { MerchantTokenUrl } from '../Utilities/Urls';
 import { ErrorHandler } from '../components/NotificationProvider';
 import { Loadings } from '../components/Loading';
 import { setTime } from '@syncfusion/ej2-react-schedule';
+import { Link } from 'react-router-dom';
 
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true)
 
-  const [data, setData] = useState([])
-  const [games, setGames] = useState([])
+  const [voucher, setVoucher] = useState([])
+  const [submerchant, subMerchant] = useState([])
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000)
     Title("Dashboard")
+
     MerchantTokenUrl().get('/dashboard').then(res => {
-      setData(res?.data?.data)
-    }).catch(err => {
-      ErrorHandler(err)
-    })
-    MerchantTokenUrl().get('/dashboard').then(res => {
-      setData(res?.data?.data)
-      console.log(res?.data?.data)
+      setVoucher(res?.data?.data?.voucher['rows'])
+      subMerchant(res?.data?.data?.merchant['rows'])
     }).catch(err => {
       ErrorHandler(err)
     })
@@ -49,7 +46,7 @@ const Dashboard = () => {
       <Header category="Merchants" title="List of Sub-Merchants" />
 
       {loading ? <Loadings /> :
-        data?.merchant?.length > 0 ?
+        submerchant?.length > 0 ?
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -71,15 +68,17 @@ const Dashboard = () => {
             </thead>
             <tbody>
               {
-                data?.merchant.map((e, i) =>
+                submerchant.map((e, i) =>
                   <tr key={i} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <td className="py-4 px-6">
                       {i + 1}
                     </td>
 
                     <td className="py-4 px-6">
+                      <Link to={ `/sub-merchant/${e.id}`}>
+                        {e.parent_company}
 
-                      {e.parent_company}
+                      </Link>
 
                     </td>
                     <td className="py-4 px-6">
@@ -108,40 +107,38 @@ const Dashboard = () => {
       <Header category="Vouchers Collections" title="List of Voucher category." />
 
       {
-        data.length > 0 ? <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-2xl">
+        voucher.length > 0 ? <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400 rounded-2xl">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
 
               <th scope="col" className="py-3 px-6">
-                Game Name
+                Voucher Name
               </th>
               <th scope="col" className="py-3 px-6">
-                Winner Number
+                Total Point
               </th>
               <th scope="col" className="py-3 px-6">
-                Point
+                Total Vouchers
               </th>
-              <th scope="col" className="py-3 px-6">
-                Helped user to play
-              </th>
+
             </tr>
           </thead>
           <tbody>
             {
-              data.map((e, i) =>
+              voucher.map((e, i) =>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
                   <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                    {e.name}
+                    <Link to={`vouchers/${e.id}/batch`}>
+                      {e.name}
+                    </Link>
                   </td>
                   <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                    {e.id}
+                    {e.total_point}
                   </td>
 
                   <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                    <Link to={e.id}>
-                      View
-                    </Link>
+                    {e.total_vouchers}
                   </td>
 
                 </tr>

@@ -26,7 +26,7 @@ const LoginPage = () => {
     const [success, setSuccess] = useState(false)
 
 
-    const token = useSelector(p => p.token?.token)
+    const token = useSelector(p => p.mToken?.mToken)
     const merchant = useSelector(p => p.merchant?.merchant)
 
     const handleLogin = (e) => {
@@ -36,6 +36,7 @@ const LoginPage = () => {
             password: log_password
         }
         MerchantUrl.post(`/login`, body).then((res) => {
+            SuccessNotification({title:"Sent!", message:res?.data?.data})
             console.log(res?.data?.data)
             setSuccess(true)
         }).catch(err => {

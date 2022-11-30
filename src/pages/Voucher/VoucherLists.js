@@ -81,10 +81,24 @@ const VoucherList = () => {
       item.push(e)
       setItem(item)
     }
-    console.log(items);
+    console.log(items)
     if (items.length>0) return setButton(true) 
     else return setButton(false)
   }
+
+useEffect(()=>{
+  checkBoxChecked(items, null)
+},[items])
+
+const checkBoxChecked = (a, b)=>{
+  if (a.includes(b)){
+    return true
+  } else return false
+
+}
+  
+
+
   const handleEnable = (e) => {
     setEnable(e.target.value)
     if (e.target.value === "false") return setActive(true)
@@ -92,9 +106,13 @@ const VoucherList = () => {
   }
 
   const Update = () => {
-    let active;
-    if (enable === true) {active = false}
-    else {active = true}
+    var active;
+    if (enable === "true") {
+      active = false
+    }
+    else {
+      active = true
+    }
     if (items==="") return ErrorNotification({title:"Error", message:"Please select one item to update."})
     if (confirm("Do You want to update?")) {
       MerchantTokenUrl().put('/voucher-list', { items: items, from: from, to: to, active: active, batch: batch_, id: id }).then((res) => {
@@ -105,7 +123,6 @@ const VoucherList = () => {
         setRefresh(true)
       }).catch(err=>{
         setBatchOf("")
-        console.log(err)
         ErrorHandler(err)
       })
     }
@@ -160,7 +177,7 @@ const VoucherList = () => {
                       <tr key={i} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" htmlFor={i}>
                         <td className="py-4 px-6">
                           <div className="flex items-center">
-                            <Checkbox onChange={() => Select(e.id)} on className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" id={i}/>
+                            <Checkbox onChange={() => Select(e.id)} className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" id={i} checked={()=>checkBoxChecked([],e.id)}/>
                             <label className="sr-only">checkbox</label>
                           </div>
                         </td>

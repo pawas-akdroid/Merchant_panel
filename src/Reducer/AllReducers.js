@@ -6,7 +6,7 @@ const { default: siteReducer } = require("./SiteReducers");
 
 const allReducers = combineReducers({
     merchant: merchantReducers,
-    token: tokenReducer,
+    mToken: tokenReducer,
     site: siteReducer
 })
 export default allReducers

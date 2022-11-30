@@ -17,7 +17,6 @@ const UserProfile = () => {
 
   const handleLogout = (e) => {
     e.preventDefault()
-    console.log("msdklcn")
     dispatch(fetchTokenSuccess(null))
     dispatch(fetchUserSuccess(null))
     dispatch(fetchSiteSuccess(null))

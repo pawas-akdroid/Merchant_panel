@@ -22,7 +22,9 @@ const CustomerPlay = () => {
 
     const [otpVerify, setOtpVerify] = useState(false)
     const { uid } = useParams()
+
     const [phone, setPhone] = useState("")
+    const [user, setUser] = useState("")
 
 
     return (
@@ -30,7 +32,7 @@ const CustomerPlay = () => {
             <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
                 <Header category="Game" title="Customer Game Play" />
                 {
-                    otpVerify === false ? <OTPComponent setOtpVerify={setOtpVerify} setPhone={setPhone} phone={phone} /> : <GameComponent id={uid} phone={phone} />
+                    otpVerify === false ? <OTPComponent setOtpVerify={setOtpVerify} setPhone={setPhone} phone={phone} setUser={setUser}/> : <GameComponent id={uid} phone={phone} user={user} />
                 }
 
 
@@ -44,17 +46,16 @@ export default CustomerPlay
 
 
 
-const OTPComponent = ({ setOtpVerify, setPhone, phone }) => {
+const OTPComponent = ({ setOtpVerify, setPhone, phone, setUser }) => {
     const [optPortion, setOtpVerified] = useState(false)
     const [OTP, setOTP] = useState("")
 
 
 
     const handleUserPhone = () => {
-        if (confirm("Are you sure?")) {
-            MerchantTokenUrl().get(`/get-transfer-token?customer=+${phone}`).then((res) => {
+        if (confirm("Are you sure you want to send code?")) {
+            MerchantTokenUrl().get(`/get-transfer-token?customer=${encodeURIComponent(phone)}`).then((res) => {
                 setOtpVerified(true)
-                console.log(res)
                 SuccessNotification({ title: "Success", message: "The otp has sent to the number please verify the number." })
             }).catch((err) => {
                 ErrorHandler(err)
@@ -63,8 +64,9 @@ const OTPComponent = ({ setOtpVerify, setPhone, phone }) => {
     }
 
     const handleOtpVerify = () => {
-        MerchantTokenUrl().post(`/verify-transfer-token?customer=+${phone}`, { "token": OTP }).then(res => {
+        MerchantTokenUrl().post(`/verify-transfer-token?customer=${encodeURIComponent(phone)}`, { "token": OTP }).then(res => {
             setOtpVerify(true)
+            setUser(res?.data?.data)
         }).catch((err) => {
             ErrorHandler(err)
         })
@@ -90,7 +92,7 @@ const OTPComponent = ({ setOtpVerify, setPhone, phone }) => {
                     defaultCountry="pl"
                     searchClass="search-class"
                     value={phone}
-                    onChange={(e) => setPhone(e)}
+                    onChange={(e) => setPhone(`+${e}`)}
                     enableSearchField
                     disableSearchIcon
                 />
@@ -105,7 +107,7 @@ const OTPComponent = ({ setOtpVerify, setPhone, phone }) => {
 }
 
 
-const GameComponent = ({ id, phone }) => {
+const GameComponent = ({ id, phone, user }) => {
     const [data, setData] = useState(null)
     const [loading, setLaoding] = useState(true)
     const [circles, setCirlces] = useState([])
@@ -118,8 +120,7 @@ const GameComponent = ({ id, phone }) => {
     const [showYoutube, setShowYoutube] = useState(false)
     const videoRef = useRef(null)
     const [submitLoading, setSubmitLoading] = useState(false)
-
-
+    const [iteration_id, setIterationId] = useState('')
     const [plusOne, setPlusOne] = useState(true)
     const [plusCircles, setPlusCirlces] = useState([])
     const [plusSelectedNumbers, setPlusSelectedNumbers] = useState([])
@@ -131,9 +132,10 @@ const GameComponent = ({ id, phone }) => {
         setTimeout(() => setLaoding(false), 1000)
         MerchantTokenUrl().get(`game/${id}`).then(res => {
             setData(res?.data?.data?.data)
-            console.log(res?.data?.data?.data)
+            console.log(res?.data?.data?.data?.GameIterations[0].id)
             setAllowed(res?.data?.data?.data?.allowed_numbers)
             setPlusOne(res?.data?.data?.data?.extra)
+            setIterationId(res?.data?.data?.data?.GameIterations[0].id)
             addInCircle(res?.data?.data?.data.total_numbers)
         }).catch((err) => {
             ErrorHandler(err)
@@ -200,7 +202,7 @@ const GameComponent = ({ id, phone }) => {
     const confirmPlay = () => {
         setConfirmBox(false)
         setMain(false)
-        MerchantTokenUrl().get(`/get-transfer-token?customer=+${phone}`).then((res) => {
+        MerchantTokenUrl().get(`/get-transfer-token?customer=${encodeURIComponent(phone)}`).then((res) => {
             SuccessNotification({ title: "Success", message: "The otp has sent to the number please verify the number." })
             console.log(res)
         }).catch((err) => {
@@ -230,7 +232,7 @@ const GameComponent = ({ id, phone }) => {
     const [OTP, setOTP] = useState("")
 
     const resendOtp = () => {
-        MerchantTokenUrl().get(`/get-transfer-token?customer=${phone}`).then((res) => {
+        MerchantTokenUrl().get(`/get-transfer-token?customer=${encodeURIComponent(phone)}`).then((res) => {
             SuccessNotification({ title: "Success", message: "The otp has sent to the number please verify the number." })
             console.log(res)
         }).catch((err) => {
@@ -241,19 +243,19 @@ const GameComponent = ({ id, phone }) => {
     useEffect(() => {
         if (OTP.length === 6) {
             // setSubmitLoading(true)
-            MerchantTokenUrl().post(`/verify-transfer-token?customer=${phone}`, { "token": OTP }).then(res => {
+            MerchantTokenUrl().post(`/verify-transfer-token?customer=${encodeURIComponent(phone)}`, { "token": OTP }).then(res => {
                 SuccessNotification({ title: "Congratulation", message: "Your otp has been verified." })
-                console.log(res)
+                MerchantTokenUrl().post('/game', { game_id: id, user_id: phone, "chosen_number": selectedNumbers.toString(), "iteration_id": iteration_id }).then(res => {
+                    SuccessNotification({ title: "Congratulation", message: "You have played the game." })
+                    history('/games')
+                }).catch(err => {
+                    console.log(err)
+                    ErrorHandler(err)
+                })
             }).catch((err) => {
                 ErrorHandler(err)
             })
-            MerchantTokenUrl().post('/game', { game_id: id, user_id: phone, "chosen_number": selectedNumbers }).then(res => {
-                SuccessNotification({ title: "Congratulation", message: "You have played the game." })
-                history('/games')
-            }).catch(err => {
-                console.log(err)
-                ErrorHandler(err)
-            })
+            
             // check if value is correct and if current play the game now
         }
     }, [OTP])
@@ -285,6 +287,17 @@ const GameComponent = ({ id, phone }) => {
 
                     </div>
                 </Modal>
+
+                <div className="ml-5">
+                    <Grid>
+                        <Grid.Col sm={6}>
+                            User Name : {user.name}
+                        </Grid.Col>
+                        <Grid.Col sm={6}>
+                            Phone : {user.phone}
+                        </Grid.Col>
+                    </Grid>
+                </div>
                 <div className='bannerImage'>
                     <Grid>
                         <Grid.Col sm={12}>

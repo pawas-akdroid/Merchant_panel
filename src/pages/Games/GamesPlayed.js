@@ -1,3 +1,4 @@
+import { Pagination } from '@mantine/core'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Header } from '../../components'
@@ -10,17 +11,22 @@ const GamesPlayed = () => {
 
     const [data, setData] = useState('')
     const [loading, setLoadings] = useState(true)
+    const [pages, setPages] = useState('')
+    const [page, setPage] = useState(1)
 
 
     useEffect(() => {
-        MerchantTokenUrl().get('/played-game').then((res) => {
-            console.log(res)
+        MerchantTokenUrl().get(`/played-game?page=${page}`).then((res) => {
+            setData(res?.data?.data?.data?.data)
+            console.log(res?.data?.data?.data?.data)
+
+            setPages(res?.data?.data?.data?.totalPages)
             setLoadings(false)
         }).catch(err => {
             setLoadings(false)
             ErrorHandler(err)
         })
-    }, [])
+    }, [page])
     return (
         loading ? <Loadings /> :
 
@@ -43,6 +49,8 @@ const GamesPlayed = () => {
                                     </th>
                                     <th scope="col" className="py-3 px-6">
                                         Winner Number
+                                    </th><th scope="col" className="py-3 px-6">
+                                        Choosen Number
                                     </th>
                                     <th scope="col" className="py-3 px-6">
                                         Point
@@ -55,37 +63,37 @@ const GamesPlayed = () => {
                             <tbody>
                                 {
                                     data.map((e, i) =>
-                                        <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <tr key={i} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
                                             <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                                                {e.name}
+                                                {e?.Game?.Category?.name} ({e?.Game.name})
                                             </td>
                                             <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                                                {e.id}
+                                                {e?.GameIterations?.winning_number ? e?.GameIterations?.winning_number :"In-Progress" }
+                                            </td>
+                                            <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                                                {e.chosen_number}
+                                            </td>
+                                            <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
+                                                {e?.Game?.charge}
                                             </td>
 
                                             <td className="py-4 px-6 font-semibold text-gray-900 dark:text-white">
-                                                <Link to={e.id}>
-                                                    View
-                                                </Link>
+                                                {e?.user_id ? "Yes" : "No"}
                                             </td>
 
                                         </tr>
                                     )
-
                                 }
-
                             </tbody>
-
-
-
                         </table>
                             :
                             <p className='p-5'>No Data Found.</p>
                     }
 
-
-
+                    <div className='p-5 justify-center'>
+                        <Pagination total={pages} onChange={setPage} />
+                    </div>
 
                 </div>
 

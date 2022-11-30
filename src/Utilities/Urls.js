@@ -13,12 +13,12 @@ export const MerchantUrl = axios.create({
     
 
 export const MerchantTokenUrl =()=>{
-    const token = (JSON.parse(localStorage.getItem("state")))?.token?.token
+    const token = (JSON.parse(localStorage.getItem("state")))?.mToken?.mToken
     const site = (JSON.parse(localStorage.getItem("state")))?.site?.site
    
     
     return axios.create({
-        baseURL: `http://44.237.37.194:6001/api/v1/merchant`,
+        baseURL: `http://44.237.37.194:6001:6001/api/v1/merchant`,
         headers:{
             "Authorization":`Bearer ${token}`,
             "site" : site,
