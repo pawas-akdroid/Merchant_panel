@@ -6,6 +6,8 @@ import { Title } from '../../components/Header'
 import { Loadings } from '../../components/Loading'
 import { ErrorHandler } from '../../components/NotificationProvider'
 import { MerchantTokenUrl } from '../../Utilities/Urls'
+import slugify from 'react-slugify';
+
 
 
 
@@ -49,7 +51,7 @@ const VoucherCategory = () => {
         })
     }
 
-    return ( loading ? <Loadings/>: 
+    return (loading ? <Loadings /> :
         <>
             <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
                 <Header category={"Vouchers"} title="List of Vouchers" />
@@ -156,7 +158,7 @@ const VoucherCategory = () => {
                                 getCreateLabel={(query) => `+ Create ${query}`}
                                 onCreate={(query) => {
                                     const item = { value: slugify(query), label: query };
-                                    setBatch((current) => [...current, item]);
+                                    setBatch(() => [...batch, item]);
                                     return item;
                                 }}
                             />

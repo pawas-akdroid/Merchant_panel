@@ -245,11 +245,10 @@ const GameComponent = ({ id, phone, user }) => {
             // setSubmitLoading(true)
             MerchantTokenUrl().post(`/verify-transfer-token?customer=${encodeURIComponent(phone)}`, { "token": OTP }).then(res => {
                 SuccessNotification({ title: "Congratulation", message: "Your otp has been verified." })
-                MerchantTokenUrl().post('/game', { game_id: id, user_id: phone, "chosen_number": selectedNumbers.toString(), "iteration_id": iteration_id }).then(res => {
+                MerchantTokenUrl().post('/game', { game_id: id, user_id: phone, "chosen_number": selectedNumbers.toString(), "iteration_id": iteration_id, charge:data?.charge }).then(res => {
                     SuccessNotification({ title: "Congratulation", message: "You have played the game." })
                     history('/games')
                 }).catch(err => {
-                    console.log(err)
                     ErrorHandler(err)
                 })
             }).catch((err) => {

@@ -52,7 +52,6 @@ function AddSubMerchant() {
       role: role,
     }
 
-    console.log(body)
     if (confirm("Are you sure, you want to add sub-merchant?")) {
       MerchantTokenUrl().post('/add-submerchant', body).then((res) => {
         SuccessNotification({ title: "Added!", message: "Your merchant has been added." })

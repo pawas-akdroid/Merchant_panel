@@ -7,7 +7,7 @@ import 'react-phone-input-2/lib/style.css'
 import { ErrorHandler, SuccessNotification, } from '../components/NotificationProvider';
 import { Box, Button, PasswordInput, Select } from '@mantine/core';
 import OTPInput, { ResendOTP } from "otp-input-react";
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { fetchUserSuccess } from '../action/UserAction';
 import axios from 'axios';
 import { Title } from '../components/Header';
@@ -120,6 +120,7 @@ const LoginPage = () => {
                                                 <ReactPhoneInput
                                                     className="ml-5 mb-3 justify-between  white  rounded  text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                                     defaultCountry="pl"
+                                                    country={'np'}
                                                     searchClass="search-class"
                                                     value={log_phone}
                                                     onChange={(e) => setPhone(`+${e}`)}
@@ -138,6 +139,9 @@ const LoginPage = () => {
                                                 <Buttons className='ml-5' color="yellow" uppercase type='submit'>
                                                     Login
                                                 </Buttons>
+                                                <Link className='ml-5' color="yellow" uppercase to={'/forget-password'}>
+                                                    Forget Password?
+                                                </Link>
                                             </form>
                                         </>
                                         : <>

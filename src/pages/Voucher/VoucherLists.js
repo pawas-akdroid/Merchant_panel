@@ -133,7 +133,7 @@ const checkBoxChecked = (a, b)=>{
       loading ?<Loadings/>: <>
       <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
         <Header category={"Sub Vouchers List"} title="List of Vouchers" />
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div className="overflow-x-auto  shadow-md sm:rounded-lg">
           <div className="flex justify-center text-center pb-4 bg-white dark:bg-gray-900 p-5">
           <select placeholder="Select voucher Action" onChange={(e) => handleEnable(e)} value={enable} defaultValue={"Enabled Lists"}
               className=" p-2 m-1 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">

@@ -27,6 +27,7 @@ function UserPlayed() {
         className='w-1/2 flex justify-between dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl h-full ml-2 md:m-2 p-2 md:p-10 '
         placeholder="phone number"
         value={value}
+        
         onChange={setValue}/>
           
           <Link to = "/gamescategory/userplay/otp">

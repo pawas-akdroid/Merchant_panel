@@ -6,7 +6,7 @@ import axios from 'axios'
 
 
 export const MerchantUrl = axios.create({
-    baseURL: `http://44.237.37.194:6001/api/v1/merchant`,
+    baseURL: `http://localhost:6001/api/v1/merchant`,
   
 })  
 
@@ -18,7 +18,7 @@ export const MerchantTokenUrl =()=>{
    
     
     return axios.create({
-        baseURL: `http://44.237.37.194:6001/api/v1/merchant`,
+        baseURL: `http://localhost:6001/api/v1/merchant`,
         headers:{
             "Authorization":`Bearer ${token}`,
             "site" : site,

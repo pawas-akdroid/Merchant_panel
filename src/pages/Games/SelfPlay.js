@@ -165,20 +165,20 @@ const SelfPlay = () => {
       setSubmitLoading(true)
       MerchantTokenUrl().post(`/verify-transfer-token`, { "token": OTP }).then(res => {
         SuccessNotification({ title: "Congratulation", message: "Your otp has been verified." })
-        MerchantTokenUrl().post('/game', { game_id: uid, "chosen_number": selectedNumbers.toString(), "iteration_id": iteration_id }).then(res => {
+        MerchantTokenUrl().post('/game', { game_id: uid, "chosen_number": selectedNumbers.toString(), "iteration_id": iteration_id, charge: data?.charge}).then(res => {
           SuccessNotification({ title: "Congratulation", message: "You have played the game." })
 
           history('/games')
         }).catch(err => {
           setMain(true)
-          console.log(err)
+          setSubmitLoading(false)
           setSelectedNumbers([])
-
           ErrorHandler(err)
         })
       }).catch((err) => {
         setSelectedNumbers([])
         setMain(true)
+        setSubmitLoading(false)
         ErrorHandler(err)
       })
 

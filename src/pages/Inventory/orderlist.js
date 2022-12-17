@@ -22,13 +22,13 @@ function orderlist() {
     <div className="md:m-1 mt-5 p-2 md:p-10 bg-white rounded-3xl  dark:bg-gray-700 dark:text-gray-200">
     <Header category="Order" title="List of Orders" />
 
-    <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+    <div className="overflow-x-auto  shadow-md sm:rounded-lg">
 
       <div className="flex justify-center text-center pb-4 bg-white dark:bg-gray-800 p-5 mb-2 rounded-t-2xl">
         <label htmlFor="table-search" className="sr-only">
           Search
         </label>
-        <div className="relative">
+        <div >
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <svg
               className="w-5 h-5 text-gray-500 dark:text-gray-400"
