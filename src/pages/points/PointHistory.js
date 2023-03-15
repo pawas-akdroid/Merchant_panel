@@ -30,7 +30,7 @@ const PointHistory = () => {
         {loading? <Loadings/> :
             <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
                 <Header category={"History"} title="Point history." />
-                <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+                <div className="overflow-x-auto shadow-md sm:rounded-lg">
                     {
                         data?.length > 0 ?
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400" style={{ height: "300", overflowY: "scroll" }}>
@@ -65,7 +65,7 @@ const PointHistory = () => {
                                             {e.id}
                                             </td>
                                             <td className="py-4 px-6">
-                                            {new Date(e.createdAt).toString()}
+                                            {new Date(e.createdAt).toLocaleString()}
                                             </td>
                                         </tr>
                                     )}

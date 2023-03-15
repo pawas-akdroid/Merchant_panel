@@ -22,6 +22,7 @@ const CreateVoucherCategory = () => {
     const [loading, setLoading] = useState(false)
     const site = useSelector(p => p?.site?.site)
     const [data, setData] = useState([])
+    const [point, setPoint] = useState("")
 
     const handleName = () => {
         setName(`${temp_}-${temp}`)
@@ -61,10 +62,11 @@ const CreateVoucherCategory = () => {
     useEffect(() => {
         MerchantTokenUrl().get('/get-all-inventory').then(res => {
             setData(res?.data?.data)
-            console.log(res?.data?.data)
+        }).catch(err => { ErrorHandler(err)})
+        MerchantTokenUrl().get('/point').then(res => {
+            setPoint(res?.data?.data?.point?.points)
         }).catch(err => {
             ErrorHandler(err)
-            console.log(err)
         })
         Title("Create Merchant Voucher")
     }, [])
@@ -75,6 +77,7 @@ const CreateVoucherCategory = () => {
             <Header category="Voucher" title="Create Merchant Voucher" />
             <div className="mt-8 dark:text-gray-200 dark:bg-secondary-dark-bg">
                 <div className="rounded-lg  dark:bg-secondary-dark-bg">
+                    <div className='ml-5'>Total remaining point: {point ? point : 0}</div>
                     <form onSubmit={handleAddMerchantVoucher}>
 
                         <div className="mb-4">
@@ -182,7 +185,6 @@ const CreateVoucherCategory = () => {
                 </div>
             </div>
         </div>
-
     )
 }
 

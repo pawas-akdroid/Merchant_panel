@@ -1,6 +1,7 @@
 import { Outlet, useRoutes } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
+import ForgetPassword from './pages/ForgetPassword';
 import CustomerPlay from './pages/Games/CustomerPlay';
 import Games from './pages/Games/Games';
 import GamesPlayed from './pages/Games/GamesPlayed';
@@ -84,6 +85,7 @@ function Router() {
 
     },
     { path: '/login', index: true, element: <LoginPage /> },
+    { path: '/forget-password', index: true, element: <ForgetPassword /> },
 
   ]);
 

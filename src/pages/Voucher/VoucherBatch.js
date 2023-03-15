@@ -26,12 +26,10 @@ const MerchantVoucherBatch = () => {
   }, [refresh])
 
   const handleEnable = (active, batch) => {
-    console.log(active, batch)
     MerchantTokenUrl().put(`voucher-list?active=${active}&batch=${batch}&id=${id}`,{}).then((res) => {
       SuccessNotification({ title: "Added!", message: "The Batch has been Updated." })
       setRefresh(true)
     }).catch((err) => {
-      console.log(err)
       ErrorHandler(err)
     })
   }
@@ -39,7 +37,8 @@ const MerchantVoucherBatch = () => {
   const Addbatch = (e) => {
     e.preventDefault
     const body = { "batch": batch, id: id }
-    adminTokenUrl().put(`voucher-category`, body).then((res) => {
+    console.log(body)
+    MerchantTokenUrl().put(`voucher-category`, body).then((res) => {
       SuccessNotification({ title: "Added!", message: "The Batch has been added." })
       setRefresh(true)
     }).catch((err) => {
@@ -62,13 +61,13 @@ const MerchantVoucherBatch = () => {
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => {
               const item = { value: slugify(query), label: query };
-              setBatch((current) => [...current, item]);
+              setBatch(() => [...batch, item]);
               return item;
             }}
           />
           <Button onClick={Addbatch} className='m-1 p-1 w-20 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'>Add New</Button>
         </form>
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div className="overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>

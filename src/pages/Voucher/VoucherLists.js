@@ -6,6 +6,7 @@ import { Button, Checkbox, Modal, Pagination, Select } from '@mantine/core'
 import { Loadings } from '../../components/Loading'
 import {  SuccessNotification, ErrorHandler } from '../../components/NotificationProvider'
 import { Title } from '../../components/Header'
+import { useSelector } from 'react-redux'
 
 
 
@@ -27,6 +28,7 @@ const VoucherList = () => {
   const [to, setTo] = useState("")
   const [batch_, setBatchOf] = useState("")
   const history = useNavigate()
+  const merchant = useSelector(p=>p?.merchant.merchant)
 
 
 
@@ -60,7 +62,7 @@ const VoucherList = () => {
 
   const handlePrint = () => {
     let batchData = batch === "all" ? null : batch
-    MerchantTokenUrl().get(`/download-voucher-lists-admin/${uid}?batch=${batchData}&merchant=${id}`,).then((res) => {
+    MerchantTokenUrl().get(`/download-voucher-lists-admin/${id}?batch=${batchData}&merchant=${merchant.id}`,).then((res) => {
       window.open(`${ImgUrl}${res.data.data}`, "_blank", 'noopener, noreferrer')
     }).catch((err) => { 
       console.log(err)
@@ -79,10 +81,24 @@ const VoucherList = () => {
       item.push(e)
       setItem(item)
     }
-    console.log(items);
+    console.log(items)
     if (items.length>0) return setButton(true) 
     else return setButton(false)
   }
+
+useEffect(()=>{
+  checkBoxChecked(items, null)
+},[items])
+
+const checkBoxChecked = (a, b)=>{
+  if (a.includes(b)){
+    return true
+  } else return false
+
+}
+  
+
+
   const handleEnable = (e) => {
     setEnable(e.target.value)
     if (e.target.value === "false") return setActive(true)
@@ -90,9 +106,13 @@ const VoucherList = () => {
   }
 
   const Update = () => {
-    let active;
-    if (enable === true) {active = false}
-    else {active = true}
+    var active;
+    if (enable === "true") {
+      active = false
+    }
+    else {
+      active = true
+    }
     if (items==="") return ErrorNotification({title:"Error", message:"Please select one item to update."})
     if (confirm("Do You want to update?")) {
       MerchantTokenUrl().put('/voucher-list', { items: items, from: from, to: to, active: active, batch: batch_, id: id }).then((res) => {
@@ -103,7 +123,6 @@ const VoucherList = () => {
         setRefresh(true)
       }).catch(err=>{
         setBatchOf("")
-        console.log(err)
         ErrorHandler(err)
       })
     }
@@ -114,7 +133,7 @@ const VoucherList = () => {
       loading ?<Loadings/>: <>
       <div className="m-2 md:m-10 mt-18 p-2 md:p-10 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-3xl">
         <Header category={"Sub Vouchers List"} title="List of Vouchers" />
-        <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
+        <div className="overflow-x-auto  shadow-md sm:rounded-lg">
           <div className="flex justify-center text-center pb-4 bg-white dark:bg-gray-900 p-5">
           <select placeholder="Select voucher Action" onChange={(e) => handleEnable(e)} value={enable} defaultValue={"Enabled Lists"}
               className=" p-2 m-1 w-50 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -158,7 +177,7 @@ const VoucherList = () => {
                       <tr key={i} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600" htmlFor={i}>
                         <td className="py-4 px-6">
                           <div className="flex items-center">
-                            <Checkbox onChange={() => Select(e.id)} on className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" id={i}/>
+                            <Checkbox onChange={() => Select(e.id)} className="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" id={i} checked={()=>checkBoxChecked([],e.id)}/>
                             <label className="sr-only">checkbox</label>
                           </div>
                         </td>

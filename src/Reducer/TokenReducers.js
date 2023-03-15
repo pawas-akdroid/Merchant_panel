@@ -1,7 +1,7 @@
 import { FETCH_TOKEN_BEGIN, FETCH_TOKEN_FAILURE, FETCH_TOKEN_SUCCESS } from '../action/Token'
 
 const initialState = {
-    token: null,
+    mToken: null,
     loading: false,
 }
 
@@ -16,7 +16,7 @@ const tokenReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                token: action.payload.token
+                mToken: action.payload.mToken
             }
         case FETCH_TOKEN_FAILURE:
             return {

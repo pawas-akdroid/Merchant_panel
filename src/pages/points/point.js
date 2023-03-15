@@ -24,10 +24,11 @@ function Points() {
   useEffect(() => {
     MerchantTokenUrl().get('/point').then(res => {
       setData(res?.data?.data["point"])
-      setAmount(res?.data?.data["config"].amounts)
-      setValue(res?.data?.data["config"].value)
+      setAmount(res?.data?.data["config"]?.amounts)
+      setValue(res?.data?.data["config"]?.value)
       setRefresh(false)
     }).catch((err) => {
+      console.log(err)
       ErrorHandler(err)
     })
   }, [refresh])
@@ -65,7 +66,7 @@ function Points() {
               <Grid grow className="p-5">
                 <Grid.Col span={6} >
                   <h2 className=" text-base mb-4">
-                    <strong> Total Remaining Points: </strong> {data.points}
+                    <strong> Total Remaining Points: </strong> {data.points ? data.points : 0}
                   </h2>
                   <h1 className='text-base mb-8'><strong>Point Config</strong></h1>
                   <form onSubmit={handlePointConfig}>

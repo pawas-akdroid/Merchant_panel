@@ -6,30 +6,30 @@ import axios from 'axios'
 
 
 export const MerchantUrl = axios.create({
-    baseURL: `http://localhost:6001/api/v1/merchant`,
+    baseURL: `http://44.232.151.192:6001/api/v1/merchant`,
   
 })  
 
     
 
 export const MerchantTokenUrl =()=>{
-    const token = (JSON.parse(localStorage.getItem("state")))?.token?.token
+    const token = (JSON.parse(localStorage.getItem("state")))?.mToken?.mToken
     const site = (JSON.parse(localStorage.getItem("state")))?.site?.site
    
     
     return axios.create({
-        baseURL: `http://localhost:6001/api/v1/merchant`,
+        baseURL: `http://44.232.151.192:6001/api/v1/merchant`,
         headers:{
             "Authorization":`Bearer ${token}`,
             "site" : site,
-            'Access-Control-Allow-Origin': 'https://aa75-27-34-20-114.ngrok.io/api/v1/merchant'
+            'Access-Control-Allow-Origin': ['http://44.232.151.192:6001/', "http://3.131.17.220:6969/"]
         }
       
     })
 } 
 
 
-export const  GameImgUrl ="https://kinkhelgame.thriftlynepal.com/"
-export const  ImgUrl ="https://kinkhelpoint.thriftlynepal.com/"
+export const  GameImgUrl ="http://3.131.17.220:6969/"
+export const  ImgUrl ="http://44.232.151.192:6001/"
 export const  ImgUrl2 ="http://localhost:6001/"
 
